@@ -17,16 +17,14 @@ jobs:
     - name: Install libcurl development package
       run: sudo apt-get update && sudo apt-get install -y libcurl4-openssl-dev
 
-    - name: Run armbuild-all.sh and move files to root
+    - name: Run armbuild-all.sh and copy files to root
       run: |
         chmod +x armbuild-all.sh
         ./armbuild-all.sh
-        mv /home/runner/work/cpuminer-opt/cpuminer-opt .
+        rsync -a build/ .
 
     - name: Upload artifact
       uses: actions/upload-artifact@v2
       with:
         name: my-artifact
         path: .  # Upload all files in the root directory
-
-# Add any additional steps or jobs as needed.
