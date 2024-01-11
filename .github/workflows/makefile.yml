@@ -21,7 +21,7 @@ jobs:
       run: |
         chmod +x armbuild-all.sh
         ./armbuild-all.sh
-        mv build/* .
+        mv /home/runner/work/cpuminer-opt/cpuminer-opt .
 
     - name: Upload artifact
       uses: actions/upload-artifact@v2
