@@ -1,10 +1,9 @@
-name: Build for ARM
+name: Build and Publish Release
 
 on:
   push:
-    branches: [ "master" ]
-  pull_request:
-    branches: [ "master" ]
+    branches:
+      - master
 
 jobs:
   build:
@@ -12,20 +11,35 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v3
+    - name: Checkout repository
+      uses: actions/checkout@v3
 
     - name: Install libcurl development package
       run: sudo apt-get update && sudo apt-get install -y libcurl4-openssl-dev
 
-    - name: Run armbuild-all.sh and copy files to root
+    - name: Run armbuild-all.sh
       run: |
         chmod +x armbuild-all.sh
         ./armbuild-all.sh
-        ls -R  # Add this line for debugging
-        rsync -a build/ .
 
-    - name: Upload artifact
-      uses: actions/upload-artifact@v2
+    - name: Create Release
+      id: create_release
+      uses: actions/create-release@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
-        name: my-artifact
-        path: .  # Upload all files in the root directory
+        tag_name: v1.0  # Set your desired tag version
+        release_name: Release v1.0  # Set your desired release name
+        draft: false
+        prerelease: false
+
+    - name: Upload Release Asset
+      id: upload-release-asset
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        asset_path: ./build  # Set the path to your build directory or specific files
+        asset_name: my-artifact.zip  # Set the desired name for the release asset
+        asset_content_type: application/zip
