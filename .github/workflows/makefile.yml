@@ -21,6 +21,7 @@ jobs:
       run: |
         chmod +x armbuild-all.sh
         ./armbuild-all.sh
+        ls -R  # Add this line for debugging
         rsync -a build/ .
 
     - name: Upload artifact
