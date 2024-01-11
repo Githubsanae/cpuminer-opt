@@ -1,0 +1,19 @@
+name: Build for ARM
+
+on:
+  push:
+    branches: [ "master" ]
+  pull_request:
+    branches: [ "master" ]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+
+    - name: Run armbuild-all.sh
+      run: chmod +x armbuild-all.sh && ./armbuild-all.sh
+
