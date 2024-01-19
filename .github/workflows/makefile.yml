@@ -16,7 +16,7 @@ jobs:
     
 
     - name: Install libcurl development package
-      run: sudo apt-get update && sudo apt-get install -y libcurl4-openssl-dev build-essential libgmp-dev libssl-dev libcurl4 libgmp10 libstdc++6 libm6 libgcc1 libc6
+      run: sudo apt-get update && sudo apt-get install -y libcurl4-openssl-dev build-essential libgmp-dev libssl-dev libcurl4 libgmp10 libstdc++6 libgcc1 libc6
 
     - name: Run armbuild-all.sh
       run: |
