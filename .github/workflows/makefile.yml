@@ -20,10 +20,10 @@ jobs:
     - name: Install libcurl development package
       run: sudo apt-get update && sudo apt-get install -y libcurl4-openssl-dev build-essential libgmp-dev libssl-dev libcurl4 libgmp10 libstdc++6 libgcc1 libc6
     
-    - name: Run armbuild-all.sh
+    - name: Run build-armv8.sh
       run: |
-        chmod +x armbuild-all.sh
-        ./armbuild-all.sh
+        chmod +x build-armv8.sh
+        ./build-armv8.sh
         
     - name: Archive artifacts
       uses: actions/upload-artifact@v2
