@@ -1,35 +1,43 @@
-name: Build for ARM
+name: Cross Compile cpuminer
 
 on:
   push:
-    branches: [ "master" ]
+    branches: [ main ]
   pull_request:
-    branches: [ "master" ]
+    branches: [ main ]
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v2
 
-    - name: check architecture
-      run: uname -m
-      
-    - name: Install libcurl development package
-      run: sudo apt-get update && sudo apt-get install -y libcurl4-openssl-dev build-essential libgmp-dev libssl-dev libcurl4 libgmp10 libstdc++6 libgcc1 libc6
-    
-    - name: Run build-armv8.sh
-      run: |
-        chmod +x build-armv8.sh
-        ./build-armv8.sh
-        
-    - name: Archive artifacts
-      uses: actions/upload-artifact@v2
+    - name: Set up Docker Container
+      uses: addnab/docker-run-action@v3
       with:
-          name: my-artifact
-          path: .
+        image: openwrtorg/sdk:latest
+        options: -v ${{ github.workspace }}:/home/build
+        run: |
+          # 以下命令在 OpenWrt 容器内执行
+          
+          # 更新软件包列表
+          opkg update
+          
+          # 安装编译工具和依赖
+          opkg install gcc make autoconf automake libtool
+          opkg install libcurl libssl
 
+    - name: Compile cpuminer
+      run: |
+        # 切换到代码目录
+        cd /home/build
 
-# Add any additional steps or jobs as needed.
+        # 如果需要，运行配置脚本
+        # ./autogen.sh
+
+        # 配置编译环境（需要根据实际情况调整）
+        ./configure
+
+        # 编译
+        make
